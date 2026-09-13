@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - BLOXSTORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gradient-to-br from-emerald-800 via-emerald-600 to-teal-700 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl max-w-md w-full p-8">
+        <div class="text-center mb-8">
+            <div class="text-5xl mb-3">🛒</div>
+            <h1 class="text-2xl font-bold text-gray-800">BLOXSTORE</h1>
+            <p class="text-gray-500">Đăng nhập để tiếp tục</p>
+        </div>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    <i class="fa-solid fa-user mr-1"></i> Tên / Email
+                </label>
+                <input type="text" id="tenDangNhap" placeholder="Nhập tài khoản..." 
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 transition">
+                <p class="text-xs text-gray-400 mt-1">Admin: taiphattt39@gmail.com</p>
+            </div>
+
+            <button id="nutDangNhap" 
+                class="w-full bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold py-3.5 rounded-xl hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                <i class="fa-solid fa-right-to-bracket mr-2"></i> ĐĂNG NHẬP
+            </button>
+        </div>
+
+        <p id="thongBaoLoi" class="text-red-500 text-center mt-4 hidden"></p>
+    </div>
+
+    <script>
+        const input = document.getElementById("tenDangNhap");
+        const nut = document.getElementById("nutDangNhap");
+        const loi = document.getElementById("thongBaoLoi");
+
+        function dangNhap() {
+            const val = input.value.trim();
+            if (!val) {
+                loi.textContent = "⚠️ Vui lòng nhập tài khoản!";
+                loi.classList.remove("hidden");
+                return;
+            }
+            localStorage.setItem("blox_user", val);
+            window.location.href = "dashboard.html";
+        }
+
+        nut.addEventListener("click", dangNhap);
+        input.addEventListener("keypress", e => e.key === "Enter" && dangNhap());
+    </script>
+</body>
+</html>
