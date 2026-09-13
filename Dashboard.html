@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLOXSTORE - Trang Chính</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        adminRed: '#b91c1c',
+                        discord: '#5865F2',
+                        primary: '#047857'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #065f46 0%, #047857 50%, #115e59 100%);
+            min-height: 100vh;
+        }
+        #adminBar {
+            background: linear-gradient(90deg, #7f1d1d, #b91c1c);
+            color: white;
+            padding: 0.5rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        #adminBar.show { display: flex; }
+        .navbar {
+            background: rgba(255,255,255,.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .running-text {
+            background: linear-gradient(90deg,#047857,#165DFF,#047857);
+            background-size: 200%;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: shine 3s linear infinite;
+            font-weight: bold;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 80%;
+            max-width: 320px;
+            background: white;
+            z-index: 60;
+            padding: 1.5rem;
+            transform: translateX(-100%);
+            transition: 0.3s;
+            box-shadow: 2px 0 20px rgba(0,0,0,.15);
+        }
+        .menu-panel.active { transform: translateX(0); }
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            z-index: 55;
+            display: none;
+        }
+        .menu-overlay.active { display: block; }
+        .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,.2);
+        }
+        .btn-main {
+            background: linear-gradient(90deg,#047857,#165DFF);
+            color: white;
+            font-weight: bold;
+            padding: 1rem 2.5rem;
+            border-radius: 14px;
+            transition: 0.2s;
+        }
+        .btn-main:hover { transform: translateY(-3px); }
+        .discord-btn {
+            background: #5865F2;
+            color: white;
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+        }
+        .menu-item:hover { background: #f1f5f9; }
+    </style>
+</head>
+<body class="font-sans">
+    <!-- Thanh Admin -->
+    <div id="adminBar">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>🔐 CHẾ ĐỘ QUẢN TRỊ • Bảng Điều Khiển</span>
+    </div>
+
+    <!-- Thanh Menu Trên -->
+    <nav class="navbar">
+        <button id="menuBtn" class="text-xl p-2 hover:bg-gray-100 rounded-full">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="running-text text-sm md:text-base">🛒 BLOXSTORE • Phát triển bởi Huỳnh Phát Tài 🚀</div>
+        <div class="w-8"></div>
+    </nav>
+
+    <!-- Lớp phủ & Menu Trượt -->
+    <div id="menuOverlay" class="menu-overlay"></div>
+    <aside id="menuPanel" class="menu-panel">
+        <div class="flex justify-between items-center mb-6 pb-3 border-b">
+            <h3 class="font-bold text-lg">☰ Menu Hệ Thống</h3>
+            <button id="closeMenu" class="text-xl text-gray-400 hover:text-red-500">&times;</button>
+        </div>
+        <ul class="space-y-1">
+            <li class="menu-item">
+                <i class="fa-solid fa-house w-5 text-primary"></i> Trang Chủ
+            </li>
+            <li class="menu-item">
+                <i class="fa-solid fa-briefcase w-5 text-primary"></i> Danh Mục Dịch Vụ
+            </li>
+            <li class="bg-blue-50/60 p-3 rounded-lg mt-3">
+                <p class="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-headset"></i> Hỗ Trợ & Liên Hệ
+                </p>
+                <div class="bg-white p-3 rounded-lg text-sm space-y-3">
+                    <p class="flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-green-500"></i>
+                        <strong>Zalo:</strong> 
+                        <a href="https://zalo.me/0373778016" target="_blank" class="text-green-600 underline">0373778016</a>
+                    </p>
+                    <div>
+                        <p class="text-xs text-gray-500 mb-2">Discord: Tạo vé hoặc kết bạn</p>
+                        <a href="https://discord.com/invite/S56mp9dJ" target="_blank" rel="noopener noreferrer" class="discord-btn">
+                            <i class="fa-brands fa-discord"></i> Mở Máy Chủ
+                        </a>
+                    </div>
+                </div>
+            </li>
+            <hr class="my-3">
+            <li id="logoutItem" class="menu-item text-red-500 hover:bg-red-50 cursor-pointer">
+                <i class="fa-solid fa-right-from-bracket w-5"></i> Đăng Xuất
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Nội dung chính -->
+    <main class="flex items-center justify-center p-6 mt-6">
+        <div class="card max-w-lg w-full p-10 text-center">
+            <div class="text-7xl mb-6">👋</div>
+            <h1 class="text-3xl font-bold text-gray-800 mb-3">Chào mừng bạn quay trở lại!</h1>
+            <p class="text-xl text-gray-500 mb-2">Tài khoản của bạn:</p>
+            <p id="accEmail" class="font-bold text-emerald-600 text-lg mb-8 break-all"></p>
+            <button class="btn-main">
+                TIẾP TỤC <i class="fa-solid fa-arrow-right ml-2"></i>
+            </button>
+            <br><br>
+            <a href="index.html" id="logoutLink" class="text-gray-400 hover:text-sm">← Quay lại / Đăng xuất</a>
+        </div>
+    </main>
+
+    <script>
+        // Lấy & Hiển thị tài khoản
+        const nguoiDung = localStorage.getItem("blox_user") || "Khách";
+        document.getElementById("accEmail").textContent = nguoiDung;
+
+        // Kiểm tra Admin
+        if(nguoiDung.trim().toLowerCase() === "taiphattt39@gmail.com"){
+            document.getElementById("adminBar").classList.add("show");
+        }
+
+        // Điều khiển Menu
+        const menuBtn=document.getElementById("menuBtn"),
+              closeBtn=document.getElementById("closeMenu"),
+              overlay=document.getElementById("menuOverlay"),
+              panel=document.getElementById("menuPanel");
+
+        function moMenu(){
+            panel.classList.add("active");
+            overlay.classList.add("active");
+            document.body.style.overflow="hidden";
+        }
+        function dongMenu(){
+            panel.classList.remove("active");
+            overlay.classList.remove("active");
+            document.body.style.overflow="";
+        }
+
+        menuBtn.addEventListener("click", moMenu);
+        [closeBtn, overlay].forEach(el => el.addEventListener("click", dongMenu));
+
+        // Đăng xuất
+        function thoatHeThong(){
+            localStorage.removeItem("blox_user");
+            window.location.href = "index.html";
+        }
+
+        document.getElementById("logoutItem").addEventListener("click", thoatHeThong);
+        document.getElementById("logoutLink").addEventListener("click", e => {
+            e.preventDefault(); thoatHeThong();
+        });
+    </script>
+</body>
+  </html>
+  
