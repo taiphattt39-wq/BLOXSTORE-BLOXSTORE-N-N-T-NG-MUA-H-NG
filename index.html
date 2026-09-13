@@ -15,7 +15,7 @@
             padding-bottom: 2rem;
         }
 
-        /* Thanh LED */
+        /* Thanh LED rõ chữ, chạy mượt không lỗi */
         .top-bar {
             width: 92%; max-width: 450px; margin: 1rem auto 0;
             background: rgba(6, 78, 59, 0.85); border: 2px solid #34d399; border-radius: 14px;
@@ -36,7 +36,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* Tiêu đề */
         .header-section { text-align: center; margin-top: 2.5rem; color: white; }
         .cart-logo { font-size: 3.5rem; margin-bottom: 1rem; }
         h1 { font-size: 2.3rem; font-weight: 800; letter-spacing: 0.5px; }
@@ -47,7 +46,6 @@
             margin: 2rem auto;
         }
 
-        /* Khối Form */
         .form-card {
             width: 90%; max-width: 420px; margin: 0 auto;
             background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%); border-radius: 28px;
@@ -71,7 +69,6 @@
             font-size: 0.95rem; margin-bottom: 1.5rem;
         }
         .form-footer label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-        .form-footer input[type="checkbox"] { width: auto; }
         .form-footer a { color: #a7f3d0; text-decoration: none; }
 
         .btn-submit {
@@ -81,15 +78,16 @@
         }
         .btn-submit:hover { background: #059669; transform: translateY(-2px); }
 
-        .toggle-text {
-            text-align: center; margin-top: 1.5rem; font-size: 1rem;
+        .swap-link {
+            text-align: center; margin-top: 1.5rem;
         }
-        .toggle-text a { color: #a7f3d0; font-weight: bold; text-decoration: none; }
+        .swap-link a { color: #a7f3d0; font-weight: bold; text-decoration: none; }
 
         .hidden { display: none !important; }
 
         .message {
             margin-top: 1rem; padding: 1rem; border-radius: 12px; text-align: center; font-weight: 600;
+            display: none;
         }
         .ok { background: #d1fae5; color: #065f46; }
         .err { background: #fee2e2; color: #991b1b; }
@@ -113,7 +111,6 @@
         </div>
     </div>
 
-    <!-- Tiêu đề chính -->
     <div class="header-section">
         <div class="cart-logo"><i class="fa-solid fa-cart-shopping"></i></div>
         <h1>BLOXSTORE</h1>
@@ -127,59 +124,55 @@
 
     <div class="form-card">
         <!-- Form Đăng Nhập -->
-        <div id="loginForm">
+        <div id="loginView">
             <h2 class="form-title"><span>➔</span> Đăng Nhập</h2>
 
             <div class="field">
                 <label>Tên tài khoản / Email</label>
-                <input type="text" id="userInput" placeholder="Nhập thông tin...">
+                <input type="text" id="uLogin" placeholder="Nhập thông tin...">
             </div>
-
             <div class="field">
                 <label>Mật khẩu</label>
-                <input type="password" id="passInput" placeholder="••••••••••">
+                <input type="password" id="pLogin" placeholder="••••••••••">
             </div>
 
             <div class="form-footer">
-                <label><input type="checkbox"> Ghi nhớ đăng nhập</label>
+                <label><input type="checkbox" style="width:auto"> Ghi nhớ đăng nhập</label>
                 <a href="#">Quên mật khẩu?</a>
             </div>
 
-            <button class="btn-submit" onclick="handleLogin()"><i class="fa-solid fa-lock"></i> Tiếp tục</button>
-
-            <div class="toggle-text">
-                Chưa có tài khoản? <a href="javascript:switchForm()">Đăng ký ngay</a>
+            <button class="btn-submit" onclick="dangNhap()"><i class="fa-solid fa-lock"></i> Tiếp tục</button>
+            
+            <div class="swap-link">
+                Chưa có tài khoản? <a href="javascript:doiForm()">Đăng ký ngay</a>
             </div>
         </div>
 
-        <!-- ✅ FORM ĐĂNG KÝ ĐẦY ĐỦ -->
-        <div id="registerForm" class="hidden">
-            <h2 class="form-title"><span>📝</span> Tạo Tài Khoản Mới</h2>
+        <!-- ✅ Form Đăng Ký ĐẦY ĐỦ -->
+        <div id="registerView" class="hidden">
+            <h2 class="form-title"><span>📝</span> Đăng Ký Tài Khoản</h2>
 
             <div class="field">
                 <label>Tên tài khoản / Email</label>
-                <input type="text" id="regUser" placeholder="Nhập tài khoản...">
+                <input type="text" id="uReg" placeholder="Nhập thông tin...">
             </div>
-
             <div class="field">
-                <label>Mật khẩu mới</label>
-                <input type="password" id="regPass" placeholder="Tạo mật khẩu mạnh">
+                <label>Mật khẩu</label>
+                <input type="password" id="pReg1" placeholder="Tạo mật khẩu">
             </div>
-
             <div class="field">
-                <label>Xác nhận mật khẩu</label>
-                <input type="password" id="regPass2" placeholder="Nhập lại mật khẩu">
+                <label>Nhập lại mật khẩu</label>
+                <input type="password" id="pReg2" placeholder="Xác nhận mật khẩu">
             </div>
 
-            <button class="btn-submit" onclick="handleRegister()"><i class="fa-solid fa-check"></i> Hoàn tất</button>
-
-            <div class="toggle-text">
-                Đã có tài khoản? <a href="javascript:switchForm()">Quay lại Đăng nhập</a>
+            <button class="btn-submit" onclick="dangKy()"><i class="fa-solid fa-check"></i> Hoàn tất</button>
+            
+            <div class="swap-link">
+                Đã có tài khoản? <a href="javascript:doiForm()">Quay lại Đăng nhập</a>
             </div>
         </div>
 
-        <!-- Thông báo -->
-        <div id="msgBox" class="message hidden"></div>
+        <div id="thongBao" class="message"></div>
 
         <div class="admin-info">
             <strong>Tài khoản quản trị:</strong><br>taiphattt39@gmail.com | 123456
@@ -187,57 +180,50 @@
     </div>
 
     <script>
-        // Tài khoản mặc định + Lưu trữ trình duyệt
-        const ADMIN_ACC = { email: "taiphattt39@gmail.com", pass: "123456" };
-        function getAccounts() { return JSON.parse(localStorage.getItem("blox_users") || "{}"); }
-        function saveAccount(u, p) { 
-            const list = getAccounts(); 
-            list[u] = p; 
-            localStorage.setItem("blox_users", JSON.stringify(list)); 
+        const TK_ADMIN = {email:"taiphattt39@gmail.com", mk:"123456"};
+        function dsTaiKhoan(){return JSON.parse(localStorage.getItem("dsTK")||"{}");}
+
+        function doiForm(){
+            document.getElementById("loginView").classList.toggle("hidden");
+            document.getElementById("registerView").classList.toggle("hidden");
+            document.getElementById("thongBao").style.display="none";
         }
 
-        function switchForm() {
-            document.getElementById("loginForm").classList.toggle("hidden");
-            document.getElementById("registerForm").classList.toggle("hidden");
-            document.getElementById("msgBox").classList.add("hidden");
+        function hienTB(noidung, thanhCong){
+            const o = document.getElementById("thongBao");
+            o.textContent = noidung;
+            o.className = "message " + (thanhCong ? "ok" : "err");
+            o.style.display = "block";
         }
 
-        function showMsg(text, success) {
-            const box = document.getElementById("msgBox");
-            box.textContent = text;
-            box.className = `message ${success ? "ok" : "err"}`;
-            box.classList.remove("hidden");
+        function dangNhap(){
+            const u = document.getElementById("uLogin").value.trim();
+            const p = document.getElementById("pLogin").value.trim();
+            if(!u||!p) return hienTB("Điền đủ thông tin!", false);
+            
+            const ds = dsTaiKhoan();
+            if((u===TK_ADMIN.email && p===TK_ADMIN.mk) || ds[u]===p){
+                localStorage.setItem("nguoiDangNhap",u);
+                hienTB("✅ Đăng nhập thành công!", true);
+            }else hienTB("❌ Sai thông tin!", false);
         }
 
-        function handleLogin() {
-            const u = document.getElementById("userInput").value.trim();
-            const p = document.getElementById("passInput").value.trim();
-            if (!u || !p) return showMsg("Vui lòng điền đủ thông tin!", false);
+        function dangKy(){
+            const u = document.getElementById("uReg").value.trim();
+            const p1 = document.getElementById("pReg1").value.trim();
+            const p2 = document.getElementById("pReg2").value.trim();
+            
+            if(!u||!p1||!p2) return hienTB("Điền đầy đủ thông tin!", false);
+            if(p1!==p2) return hienTB("Mật khẩu không khớp!", false);
+            if(p1.length<6) return hienTB("Mật khẩu ít nhất 6 ký tự!", false);
 
-            const accs = getAccounts();
-            if ((u === ADMIN_ACC.email && p === ADMIN_ACC.pass) || accs[u] === p) {
-                localStorage.setItem("loggedUser", u);
-                showMsg("✅ Đăng nhập thành công!", true);
-                // setTimeout(()=>location="dashboard.html",500)
-            } else showMsg("❌ Sai tài khoản hoặc mật khẩu!", false);
-        }
-
-        function handleRegister() {
-            const u = document.getElementById("regUser").value.trim();
-            const p1 = document.getElementById("regPass").value.trim();
-            const p2 = document.getElementById("regPass2").value.trim();
-
-            if (!u || !p1 || !p2) return showMsg("Điền đầy đủ thông tin!", false);
-            if (p1 !== p2) return showMsg("Mật khẩu không trùng nhau!", false);
-            if (p1.length < 6) return showMsg("Mật khẩu tối thiểu 6 ký tự!", false);
-
-            const accs = getAccounts();
-            if (accs[u] || u === ADMIN_ACC.email) return showMsg("Tên/Email đã tồn tại!", false);
-
-            saveAccount(u, p1);
-            localStorage.setItem("loggedUser", u);
-            showMsg("✅ Đăng ký hoàn tất!", true);
-            // setTimeout(()=>location="dashboard.html",500)
+            const ds = dsTaiKhoan();
+            if(ds[u] || u===TK_ADMIN.email) return hienTB("Tên đã tồn tại!", false);
+            
+            ds[u]=p1;
+            localStorage.setItem("dsTK",JSON.stringify(ds));
+            localStorage.setItem("nguoiDangNhap",u);
+            hienTB("✅ Đăng ký thành công!", true);
         }
     </script>
 </body>
