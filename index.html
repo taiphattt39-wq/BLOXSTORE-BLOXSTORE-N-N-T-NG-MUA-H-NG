@@ -6,23 +6,25 @@
     <title>BLOXSTORE • HUỲNH PHÁT TÀI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.1/crypto-js.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
         html { scroll-behavior: smooth; height: 100%; }
         body { min-height: 100%; background:#0f172a; }
 
+        /* === Header === */
         .app-header {
             background: linear-gradient(90deg,#042f2e,#064e3b,#042f2e);
             border-bottom:2px solid #6ee7b7; padding:.9rem 0; overflow:hidden; position:sticky; top:0; z-index:9999;
         }
-        .scroll-line { display:flex; width:max-content; animation: runTitle 20s linear infinite; }
+        .scroll-line { display:flex; width:max-content; animation: runTitle 22s linear infinite; }
         .scroll-text {
             color:white; font-weight:600; font-size:1.1rem;
-            padding:0 50px; white-space:nowrap;
+            padding:0 60px; white-space:nowrap;
         }
         @keyframes runTitle { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
 
+        /* === Trang Đăng Nhập/Đăng Ký === */
         .body-auth { 
             background:linear-gradient(180deg,#059669,#10b981); 
             min-height:100vh; 
@@ -48,9 +50,10 @@
         }
         .ip input {
             width:100%; padding:.9rem 1.1rem; border-radius:16px; border:none; 
-            font-size:1rem; outline:none; background:#ffffff; color:#111827;
+            font-size:1rem; outline:none; background:#fff; color:#1e293b;
+            transition:.2s;
         }
-        .ip input[type="password"] { letter-spacing:1px; }
+        .ip input:focus { box-shadow:0 0 0 3px rgba(255,255,255,.25); }
         .tb { 
             padding:.8rem; border-radius:10px; text-align:center; margin-bottom:1rem; 
             display:none; font-weight:500;
@@ -64,10 +67,11 @@
             transition:.2s;
         }
         .btn:active { transform:scale(.97); }
-        .btn-primary { background:#10b981; color:white; margin-bottom:.8rem; }
-        .btn-secondary { background:rgba(255,255,255,.15); color:white; }
+        .btn-primary { background:#10b981; color:white; margin-bottom:.8rem; box-shadow:0 6px 12px rgba(16,185,129,.2);}
+        .btn-secondary { background:rgba(255,255,255,.18); color:white; backdrop-filter:blur(4px);}
 
-        .main-body { background:#0f172a; color:#f1f5f9; min-height:100vh; padding-bottom:3rem; }
+        /* === Trang Chính === */
+        .main-body { background:#0f172a; color:#f1f5f9; min-height:100vh; padding-bottom:3rem; display:none; }
         .top-bar {
             background:#0b1220; padding:.9rem 1rem; display:flex; align-items:center; gap:.8rem;
             position:sticky; top:0; z-index:999; border-bottom:1px solid #1e293b;
@@ -102,6 +106,7 @@
         .empty-state { text-align:center; padding:4rem 2rem; color:#64748b; }
         .empty-state i { font-size:3rem; margin-bottom:1rem; opacity:.5; }
 
+        /* === Form & Nút === */
         .form-group { margin-bottom:1.2rem; }
         .form-group label { 
             display:block; margin-bottom:.5rem; font-weight:500; color:#e2e8f0; 
@@ -111,23 +116,24 @@
         .form-control {
             width:100%; padding:1rem; border-radius:12px; border:1px solid #334155;
             background:#1e293b; color:white; font-size:1rem; font-family:inherit;
+            transition:.2s;
         }
         .form-control:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
         .submit-btn { background:#2563eb; color:white; padding:1rem; border:none; border-radius:12px; font-weight:bold; width:100%; font-size:1rem; margin-top:.5rem; }
         .submit-btn:active { transform:scale(.98); }
 
-        /* Nút chức năng */
         .btn-nho {
             padding:.6rem .9rem; border-radius:8px; border:none; font-weight:600; font-size:.8rem; cursor:pointer; transition:.2s;
         }
         .btn-xanh { background:#16a34a; color:white; }
-        .btn-vang { background:#f59e0b; color:#1e293b; } /* Nút Chờ màu vàng */
+        .btn-vang { background:#f59e0b; color:#1e293b; }
         .btn-do { background:#dc2626; color:white; }
         .khung-nut { display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap; }
 
+        /* === Menu Trượt === */
         .sidebar {
             position:fixed; top:0; left:-100%; width:280px; height:100vh; background:#020617;
-            border-right:1px solid #1f2937; padding:2rem 1.5rem; transition:.3s; z-index:9999;
+            border-right:1px solid #1f2937; padding:2rem 1.5rem; transition:.3s ease; z-index:9999;
         }
         .sidebar.mo { left:0; }
         .dong { padding:1rem 0; border-bottom:1px solid #1f2937; cursor:pointer; display:flex; align-items:center; gap:.6rem; color:#e2e8f0; }
@@ -145,6 +151,7 @@
     </div>
 </div>
 
+<!-- Khu Đăng Nhập / Đăng Ký -->
 <div id="khu-dangnhap" class="body-auth">
     <div class="alert-top">🔒 Bảo mật thông tin & Mã hóa an toàn</div>
     
@@ -162,14 +169,14 @@
         </div>
         <div class="ip">
             <label style="justify-content:center;">Mã bảo mật (4 số)</label>
-            <input type="password" id="dn-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center" autocomplete="one-time-code">
+            <input type="text" id="dn-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center" autocomplete="one-time-code">
         </div>
 
         <button id="nut-dangnhap" class="btn btn-primary">
             <i class="fa fa-unlock-alt mr-2"></i> Đăng nhập
         </button>
         <button id="nut-sangdk" class="btn btn-secondary">
-            → Chuyển sang Đăng Ký
+            → Chuyển sang Đăng Ký Tài Khoản
         </button>
     </div>
 
@@ -182,12 +189,12 @@
             <input type="email" id="dk-email" placeholder="taiphattt39@gmail.com" autocomplete="email">
         </div>
         <div class="ip">
-            <label><i class="fa fa-lock"></i> Mật khẩu mới</label>
+            <label><i class="fa fa-lock"></i> Mật khẩu mới (từ 6 ký tự)</label>
             <input type="password" id="dk-mk" autocomplete="new-password">
         </div>
         <div class="ip">
-            <label style="justify-content:center;">Mã bảo mật (4 số)</label>
-            <input type="password" id="dk-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center">
+            <label style="justify-content:center;">Mã bảo mật (4 số - bắt buộc)</label>
+            <input type="text" id="dk-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center">
         </div>
 
         <button id="nut-dangky" class="btn btn-primary">✅ Hoàn tất Đăng Ký</button>
@@ -195,7 +202,8 @@
     </div>
 </div>
 
-<div id="trang-chinh" class="main-body" style="display:none;">
+<!-- Trang chính sau khi đăng nhập -->
+<div id="trang-chinh" class="main-body">
     <div class="top-bar">
         <button class="menu-btn" onclick="moMenu()">☰</button>
         <div class="nav-tabs">
@@ -253,7 +261,6 @@
             </div>
         </div>
 
-        <!-- Lịch sử có đủ 3 nút: Chờ, Xác nhận, Hủy -->
         <div id="pg-lichsu" class="page">
             <div id="khungLichSu">
                 <div class="empty-state">
@@ -278,131 +285,144 @@
 </div>
 
 <script>
-const LUU_TAIKHOAN = "bloxstore_user";
-const LUU_LICHSU = "bloxstore_orders";
-let currentUser = null;
+// === KHÓA LƯU ===
+const KEY_ACC = "bloxstore_acc_data";
+const KEY_ORDERS = "bloxstore_orders_list";
 
+// === CHUYỂN FORM ĐK/DN ===
+document.getElementById("nut-sangdk").onclick = () => {
+    document.getElementById("dn-form").classList.add("an");
+    document.getElementById("dk-form").classList.remove("an");
+    xoaThongBao();
+};
+document.getElementById("nut-sangdn").onclick = () => {
+    document.getElementById("dk-form").classList.add("an");
+    document.getElementById("dn-form").classList.remove("an");
+    xoaThongBao();
+};
+
+function xoaThongBao(){
+    document.querySelectorAll('.tb').forEach(el=>{el.style.display='none'; el.className='tb';});
+}
+
+// === ĐĂNG KÝ ===
+document.getElementById("nut-dangky").onclick = () => {
+    const email = document.getElementById("dk-email").value.trim();
+    const mk = document.getElementById("dk-mk").value;
+    const ma = document.getElementById("dk-ma").value.trim();
+    const tb = document.getElementById("tb-dk");
+    tb.style.display='none';
+
+    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        tb.className="tb err"; tb.textContent="❌ Email không hợp lệ!"; return;
+    }
+    if(!mk || mk.length < 6){
+        tb.className="tb err"; tb.textContent="❌ Mật khẩu tối thiểu 6 ký tự!"; return;
+    }
+    if(!/^\d{4}$/.test(ma)){
+        tb.className="tb err"; tb.textContent="❌ Mã bảo mật đủ 4 chữ số!"; return;
+    }
+
+    // Lưu: Mã hóa mật khẩu an toàn
+    const dataUser = {
+        email: email,
+        pass: btoa(mk),
+        code: ma
+    };
+    localStorage.setItem(KEY_ACC, JSON.stringify(dataUser));
+    
+    tb.className="tb ok"; tb.textContent="✅ Đăng ký thành công! Đang chuyển...";
+    setTimeout(()=>{
+        document.getElementById("dk-form").classList.add("an"); 
+        document.getElementById("dn-form").classList.remove("an");
+        document.getElementById("dn-email").value = email;
+    },1000);
+};
+
+// ✅ ĐĂNG NHẬP - ĐÃ SỬA LỖI CHẠY & DỮ LIỆU
+document.getElementById("nut-dangnhap").addEventListener('click', function(){
+    const email = document.getElementById("dn-email").value.trim();
+    const mk = document.getElementById("dn-mk").value;
+    const ma = document.getElementById("dn-ma").value.trim();
+    const tb = document.getElementById("tb-dn");
+    tb.style.display='none';
+
+    // 1. Kiểm tra đầu vào
+    if(!email || !mk || !ma){
+        tb.className="tb err"; tb.textContent="❌ Điền đủ Email, Mật khẩu & Mã!"; return;
+    }
+
+    // 2. Lấy dữ liệu + Xử lý nếu dữ liệu hỏng/lỗi
+    let luu;
+    try{
+        const raw = localStorage.getItem(KEY_ACC);
+        if(!raw) throw new Error("Không tồn tại");
+        luu = JSON.parse(raw);
+        if(!luu || !luu.email || !luu.pass || !luu.code) throw new Error("Dữ liệu hỏng");
+    } catch(err){
+        localStorage.removeItem(KEY_ACC); // Xóa rác
+        tb.className="tb err"; tb.textContent="⚠️ Chưa có tài khoản hoặc dữ liệu lỗi! Vui lòng ĐĂNG KÝ trước.";
+        return;
+    }
+
+    // 3. Xác thực thông tin
+    const mkGiaiMa = atob(luu.pass);
+    if(email === luu.email && mk === mkGiaiMa && ma === luu.code){
+        tb.className="tb ok"; tb.textContent="✅ Đăng nhập THÀNH CÔNG! Đang tải giao diện...";
+        // Hiển thị trang chính / Ẩn đăng nhập - SỬA LỖI HIỂN THỊ
+        setTimeout(()=>{
+            document.getElementById("khu-dangnhap").style.display = "none";
+            document.getElementById("trang-chinh").style.display = "block";
+            chuyenTrang('dichvu'); // Mở mặc định trang dịch vụ
+        }, 500);
+    } else {
+        tb.className="tb err"; tb.textContent="❌ Sai Email / Mật khẩu / Mã bảo mật!";
+    }
+});
+
+// === CHUYỂN TRANG TAB ===
 function chuyenTrang(ten){
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     
-    document.getElementById(`pg-${ten}`).classList.add('active');
-    document.querySelector(`[data-trang="${ten}"]`)?.classList.add('active');
+    const pageEl = document.getElementById(`pg-${ten}`);
+    const tabEl = document.querySelector(`[data-trang="${ten}"]`);
+    if(pageEl) pageEl.classList.add('active');
+    if(tabEl) tabEl.classList.add('active');
     
-    if(ten === 'lichsu') capNhatLichSu();
+    if(ten === 'lichsu') napLichSuDonHang();
 }
 document.addEventListener('click', e => {
     if(e.target.classList.contains('tab-btn')) chuyenTrang(e.target.dataset.trang);
 });
 
-document.getElementById("nut-sangdk").onclick = () => {
-    document.getElementById("dn-form").classList.add("an");
-    document.getElementById("dk-form").classList.remove("an");
-};
-document.getElementById("nut-sangdn").onclick = () => {
-    document.getElementById("dk-form").classList.add("an");
-    document.getElementById("dn-form").classList.remove("an");
-};
-
-document.getElementById("nut-dangky").onclick = () => {
-    const e = document.getElementById("dk-email").value.trim(),
-          mk = document.getElementById("dk-mk").value,
-          ma = document.getElementById("dk-ma").value,
-          tb = document.getElementById("tb-dk");
-    if(!e || mk.length < 6 || !/^\d{4}$/.test(ma)){
-        tb.className="tb err"; tb.textContent="❌ Thông tin không hợp lệ!";
-        return;
-    }
-    
-    localStorage.setItem(LUU_TAIKHOAN, JSON.stringify({email:e, mk:btoa(mk), ma}));
-    tb.className="tb ok"; tb.textContent="✅ Đăng ký thành công!";
-    setTimeout(()=>{
-        document.getElementById("dk-form").classList.add("an"); 
-        document.getElementById("dn-form").classList.remove("an");
-        document.getElementById("dn-email").value = e;
-    },1000);
-};
-
-document.getElementById("nut-dangnhap").onclick = () => {
-    const email = document.getElementById("dn-email").value.trim(),
-          mk = document.getElementById("dn-mk").value,
-          ma = document.getElementById("dn-ma").value,
-          tb = document.getElementById("tb-dn"),
-          luu = localStorage.getItem(LUU_TAIKHOAN);
-    
-    if(!luu){ tb.className="tb err"; tb.textContent="⚠️ Chưa có tài khoản!"; return; }
-    try{
-        const u = JSON.parse(luu);
-        if(u.email===email && atob(u.mk)===mk && u.ma===ma){
-            tb.className="tb ok"; tb.textContent="✅ Đăng nhập thành công!";
-            setTimeout(()=>{
-                document.getElementById("khu-dangnhap").style.display="none";
-                document.getElementById("trang-chinh").style.display="block";
-                chuyenTrang("dichvu");
-            },500);
-        } else tb.className="tb err"; tb.textContent="❌ Sai thông tin!";
-    }catch(e){ tb.className="tb err"; tb.textContent="❌ Lỗi dữ liệu!"; }
-};
-
+// === ĐẶT HÀNG ===
 function datHang(){
     const tb = document.getElementById("thongbaoDatHang");
-    const dv = document.getElementById("selDichVu").value;
-    const lienLac = document.getElementById("lienLac").value.trim();
-    const moTa = document.getElementById("moTa").value.trim();
+    const tenDV = document.getElementById("selDichVu").value;
+    const lienHe = document.getElementById("lienLac").value.trim();
+    const ghiChu = document.getElementById("moTa").value.trim();
     
-    if(!lienLac) { tb.className="tb err"; tb.textContent="❌ Nhập thông tin liên lạc!"; return; }
-    if(!moTa) { tb.className="tb err"; tb.textContent="❌ Nhập mô tả công việc!"; return; }
-    
-    const ls = JSON.parse(localStorage.getItem(LUU_LICHSU)||"[]");
-    ls.unshift({
-        id:"#DH" + Date.now(), 
-        dv: dv, 
-        lienHe: lienLac, 
-        ghiChu: moTa, 
-        thoiGian: new Date().toLocaleString("vi-VN"), 
-        trangThai:"⏳ Chờ xác nhận"
+    if(!lienHe) { tb.className="tb err"; tb.textContent="❌ Nhập thông tin liên lạc!"; return; }
+    if(!ghiChu) { tb.className="tb err"; tb.textContent="❌ Mô tả yêu cầu công việc!"; return; }
+
+    const ds = layDanhSachDon();
+    ds.unshift({
+        id: "#DH" + Date.now(),
+        dichVu: tenDV,
+        lienHe: lienHe,
+        moTa: ghiChu,
+        ngay: new Date().toLocaleString('vi-VN'),
+        trangThai: "⏳ Chờ xác nhận"
     });
-    localStorage.setItem(LUU_LICHSU, JSON.stringify(ls));
+    luuDanhSachDon(ds);
     
     tb.className="tb ok"; tb.textContent="✅ Đặt hàng thành công!";
     document.getElementById("lienLac").value = "";
     document.getElementById("moTa").value = "";
 }
 
-function capNhatLichSu(){
-    const ds = JSON.parse(localStorage.getItem(LUU_LICHSU)||"[]"), khung=document.getElementById("khungLichSu");
-    if(!ds.length){ 
-        khung.innerHTML=`<div class="empty-state"><i class="fa fa-folder-open"></i><h3>Chưa có đơn hàng</h3></div>`; 
-        return; 
-    }
-    
-    khung.innerHTML=ds.map(d=>`
-    <div class="service-card">
-        <div class="font-bold text-lg mb-1">${d.id} • ${d.dv}</div>
-        <div class="text-sm text-sky-200 mb-1"><i class="fa fa-address-card"></i> Liên hệ: ${d.lienHe}</div>
-        <div class="text-slate-300 text-sm mb-2">${d.ghiChu||"(Trống)"}</div>
-        <div class="text-xs text-emerald-400 font-semibold mb-3">📅 ${d.thoiGian} • ${d.trangThai}</div>
-        
-        <div class="khung-nut">
-            <button class="btn-nho btn-vang" onclick="doiTrangThai('${d.id}', '⏳ Chờ xác nhận')">
-                <i class="fa fa-clock"></i> Chờ
-            </button>
-            <button class="btn-nho btn-xanh" onclick="doiTrangThai('${d.id}', '✅ Hoàn tất')">
-                <i class="fa fa-check"></i> Xác nhận
-            </button>
-            <button class="btn-nho btn-do" onclick="doiTrangThai('${d.id}', '❌ Đã hủy')">
-                <i class="fa fa-times"></i> Hủy
-            </button>
-        </div>
-    </div>`).join("");
-}
-
-function doiTrangThai(idMoi, trangThaiMoi){
-    const ds = JSON.parse(localStorage.getItem(LUU_LICHSU)||"[]");
-    const capNhat = ds.map(doi => doi.id === idMoi ? {...doi, trangThai: trangThaiMoi} : doi);
-    localStorage.setItem(LUU_LICHSU, JSON.stringify(capNhat));
-    capNhatLichSu();
-}
-
-function moMenu(){document.getElementById("menu-chinh").classList.add("mo"); document.getElementById("lop-phu").classList.add("hien");}
-function dongMenu(){document.getElementById("menu-chinh").classList.rem
+// === QUẢN LÝ LỊCH SỬ ===
+function layDanhSachDon(){
+    try{ return JSON.parse(localStorage.getItem(KEY_ORDERS)||"[]"); } 
+    catch
