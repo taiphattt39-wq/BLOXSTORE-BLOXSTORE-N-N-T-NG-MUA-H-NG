@@ -2,229 +2,407 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLOXSTORE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BLOXSTORE • HUỲNH PHÁT TÀI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            background: linear-gradient(180deg, #059669 0%, #10b981 100%);
-            min-height: 100vh;
-            padding-bottom: 2rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        html { scroll-behavior: smooth; height: 100%; }
+        body { min-height: 100%; background:#0f172a; }
 
-        /* Thanh LED rõ chữ, chạy mượt không lỗi */
+        .app-header {
+            background: linear-gradient(90deg,#042f2e,#064e3b,#042f2e);
+            border-bottom:2px solid #6ee7b7; padding:.9rem 0; overflow:hidden; position:sticky; top:0; z-index:9999;
+        }
+        .scroll-line { display:flex; width:max-content; animation: runTitle 20s linear infinite; }
+        .scroll-text {
+            color:white; font-weight:600; font-size:1.1rem;
+            padding:0 50px; white-space:nowrap;
+        }
+        @keyframes runTitle { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+        .body-auth { 
+            background:linear-gradient(180deg,#059669,#10b981); 
+            min-height:100vh; 
+            padding:1.5rem 1rem 3rem; 
+        }
+        .alert-top {
+            background:#065f46; border:2px solid #6ee7b7; color:#dcfce7;
+            padding:.8rem; border-radius:999px; max-width:420px; margin:0 auto 1.5rem; text-align:center; font-size:1rem; font-weight:500;
+        }
+        .card {
+            background:linear-gradient(180deg,#2563eb,#3b82f6);
+            border-radius:32px; padding:2rem 1.6rem; max-width:420px; margin:0 auto;
+            box-shadow:0 15px 35px rgba(0,0,0,.25);
+        }
+        .an { display:none !important; }
+        .title {
+            color:white; text-align:center; font-size:1.6rem; font-weight:bold; margin-bottom:1.5rem;
+            display:flex; align-items:center; justify-content:center; gap:.5rem;
+        }
+        .ip { margin-bottom:1.2rem; }
+        .ip label {
+            display:flex; align-items:center; gap:.5rem; color:white; font-size:1rem; font-weight:500; margin-bottom:.5rem;
+        }
+        .ip input {
+            width:100%; padding:.9rem 1.1rem; border-radius:16px; border:none; 
+            font-size:1rem; outline:none; background:#ffffff; color:#111827;
+        }
+        .ip input[type="password"] { letter-spacing:1px; }
+        .tb { 
+            padding:.8rem; border-radius:10px; text-align:center; margin-bottom:1rem; 
+            display:none; font-weight:500;
+        }
+        .ok { background:#dcfce7; color:#166534; border:1px solid #6ee7b7; display:block; }
+        .err { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; display:block; }
+
+        .btn {
+            width:100%; padding:.9rem; border-radius:14px; border:none; 
+            font-weight:bold; font-size:1rem; cursor:pointer;
+            transition:.2s;
+        }
+        .btn:active { transform:scale(.97); }
+        .btn-primary { background:#10b981; color:white; margin-bottom:.8rem; }
+        .btn-secondary { background:rgba(255,255,255,.15); color:white; }
+
+        .main-body { background:#0f172a; color:#f1f5f9; min-height:100vh; padding-bottom:3rem; }
         .top-bar {
-            width: 92%; max-width: 450px; margin: 1rem auto 0;
-            background: rgba(6, 78, 59, 0.85); border: 2px solid #34d399; border-radius: 14px;
-            padding: 0.6rem 0; overflow: hidden;
-            box-shadow: 0 0 12px rgba(52,211,153,0.25), inset 0 0 10px rgba(0,0,0,0.2);
+            background:#0b1220; padding:.9rem 1rem; display:flex; align-items:center; gap:.8rem;
+            position:sticky; top:0; z-index:999; border-bottom:1px solid #1e293b;
         }
-        .text-track {
-            display: flex; width: max-content;
-            animation: scrollSmooth 7s linear infinite;
+        .menu-btn { font-size:1.5rem; background:none; border:none; color:#fff; cursor:pointer; padding:.4rem; }
+        .nav-tabs { display:flex; gap:.4rem; flex:1; }
+        .tab-btn {
+            flex:1; padding:.8rem .6rem; border-radius:999px; border:none; font-weight:600;
+            background:#1e293b; color:#94a3b8; cursor:pointer; font-size:.9rem;
+            transition:.2s;
         }
-        .text-content {
-            flex-shrink: 0; padding: 0 2rem;
-            font-size: 0.95rem; font-weight: 600; color: #6ee7b7;
-            text-shadow: 0 0 6px #10b981; white-space: nowrap;
-        }
-        @keyframes scrollSmooth {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
+        .tab-btn.active { background:#2563eb; color:#fff; box-shadow:0 0 10px rgba(37,99,235,.25); }
+        .user-avatar { font-size:1.4rem; }
 
-        .header-section { text-align: center; margin-top: 2.5rem; color: white; }
-        .cart-logo { font-size: 3.5rem; margin-bottom: 1rem; }
-        h1 { font-size: 2.3rem; font-weight: 800; letter-spacing: 0.5px; }
-        .desc { font-size: 1.25rem; opacity: 0.95; margin-top: 0.8rem; line-height: 1.6; }
-        .divider-line {
-            width: 85%; height: 6px;
-            background: linear-gradient(90deg, #34d399, #22d3ee, #34d399); border-radius: 999px;
-            margin: 2rem auto;
-        }
+        .container { padding:1.2rem; max-width:100%; margin:0 auto; }
+        .page { display:none; }
+        .page.active { display:block; }
 
-        .form-card {
-            width: 90%; max-width: 420px; margin: 0 auto;
-            background: linear-gradient(180deg, #2563eb 0%, #3b82f6 100%); border-radius: 28px;
-            padding: 2rem 1.8rem; color: white; box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        .service-card {
+            background:#111827; border:1px solid #1f2937; border-radius:20px; 
+            padding:1.4rem; margin-bottom:1.3rem;
         }
-        .form-title {
-            font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;
-            margin-bottom: 1.8rem;
+        .category-title { 
+            display:flex; align-items:center; gap:.6rem; font-size:1.2rem; font-weight:bold; 
+            margin-bottom:1.2rem; color:#38bdf8;
         }
-        .field { margin-bottom: 1.5rem; }
-        .field label { display: block; font-size: 1.2rem; margin-bottom: 0.8rem; opacity: 0.92; }
-        .field input {
-            width: 100%; padding: 1rem 1.3rem; border: none; border-radius: 16px;
-            font-size: 1.1rem; background: white; color: #1f2937; outline: none;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .item-row { 
+            display:flex; justify-content:space-between; align-items:center; 
+            padding:.9rem 0; border-bottom:1px dashed #334155; gap:.6rem; flex-wrap:wrap;
         }
-        .field input:focus { box-shadow: 0 0 0 4px rgba(16,185,129,0.35); }
+        .price-tag { background:rgba(16,185,129,.15); color:#34d399; padding:.4rem .9rem; border-radius:999px; font-weight:bold; }
+        .empty-state { text-align:center; padding:4rem 2rem; color:#64748b; }
+        .empty-state i { font-size:3rem; margin-bottom:1rem; opacity:.5; }
 
-        .form-footer {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.95rem; margin-bottom: 1.5rem;
+        .form-group { margin-bottom:1.2rem; }
+        .form-group label { 
+            display:block; margin-bottom:.5rem; font-weight:500; color:#e2e8f0; 
+            display:flex; align-items:center; gap:.5rem;
         }
-        .form-footer label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-        .form-footer a { color: #a7f3d0; text-decoration: none; }
-
-        .btn-submit {
-            width: 100%; padding: 1rem; border: none; border-radius: 16px;
-            background: #10b981; color: white; font-size: 1.15rem; font-weight: 700;
-            cursor: pointer; transition: 0.2s;
+        .batbuoc { color:#f87171; font-weight:bold; }
+        .form-control {
+            width:100%; padding:1rem; border-radius:12px; border:1px solid #334155;
+            background:#1e293b; color:white; font-size:1rem; font-family:inherit;
         }
-        .btn-submit:hover { background: #059669; transform: translateY(-2px); }
+        .form-control:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+        .submit-btn { background:#2563eb; color:white; padding:1rem; border:none; border-radius:12px; font-weight:bold; width:100%; font-size:1rem; margin-top:.5rem; }
+        .submit-btn:active { transform:scale(.98); }
 
-        .swap-link {
-            text-align: center; margin-top: 1.5rem;
+        /* Nút chức năng */
+        .btn-nho {
+            padding:.6rem .9rem; border-radius:8px; border:none; font-weight:600; font-size:.8rem; cursor:pointer; transition:.2s;
         }
-        .swap-link a { color: #a7f3d0; font-weight: bold; text-decoration: none; }
+        .btn-xanh { background:#16a34a; color:white; }
+        .btn-vang { background:#f59e0b; color:#1e293b; } /* Nút Chờ màu vàng */
+        .btn-do { background:#dc2626; color:white; }
+        .khung-nut { display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap; }
 
-        .hidden { display: none !important; }
-
-        .message {
-            margin-top: 1rem; padding: 1rem; border-radius: 12px; text-align: center; font-weight: 600;
-            display: none;
+        .sidebar {
+            position:fixed; top:0; left:-100%; width:280px; height:100vh; background:#020617;
+            border-right:1px solid #1f2937; padding:2rem 1.5rem; transition:.3s; z-index:9999;
         }
-        .ok { background: #d1fae5; color: #065f46; }
-        .err { background: #fee2e2; color: #991b1b; }
-
-        .admin-info {
-            background: white; color: #4b5563; padding: 1rem; border-radius: 14px;
-            text-align: center; font-size: 0.9rem; margin-top: 1.5rem;
-        }
+        .sidebar.mo { left:0; }
+        .dong { padding:1rem 0; border-bottom:1px solid #1f2937; cursor:pointer; display:flex; align-items:center; gap:.6rem; color:#e2e8f0; }
+        .close-menu { position:absolute; top:1rem; right:1rem; background:none; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer; }
+        .lop-phu { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); z-index:9998; }
+        .lop-phu.hien { display:block; }
     </style>
 </head>
 <body>
-    <!-- Thanh thông báo -->
+
+<div class="app-header">
+    <div class="scroll-line">
+        <span class="scroll-text">💎 HUỲNH PHÁT TÀI • BLOXSTORE • DỊCH VỤ UY TÍN • AN TOÀN • MINH BẠCH 💎</span>
+        <span class="scroll-text">💎 HUỲNH PHÁT TÀI • BLOXSTORE • DỊCH VỤ UY TÍN • AN TOÀN • MINH BẠCH 💎</span>
+    </div>
+</div>
+
+<div id="khu-dangnhap" class="body-auth">
+    <div class="alert-top">🔒 Bảo mật thông tin & Mã hóa an toàn</div>
+    
+    <div id="dn-form" class="card">
+        <h1 class="title"><i class="fa-solid fa-lock"></i> Đăng Nhập</h1>
+        <div id="tb-dn" class="tb"></div>
+        
+        <div class="ip">
+            <label><i class="fa fa-envelope"></i> Email</label>
+            <input type="email" id="dn-email" placeholder="taiphattt39@gmail.com" autocomplete="email">
+        </div>
+        <div class="ip">
+            <label><i class="fa fa-key"></i> Mật khẩu</label>
+            <input type="password" id="dn-mk" autocomplete="current-password">
+        </div>
+        <div class="ip">
+            <label style="justify-content:center;">Mã bảo mật (4 số)</label>
+            <input type="password" id="dn-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center" autocomplete="one-time-code">
+        </div>
+
+        <button id="nut-dangnhap" class="btn btn-primary">
+            <i class="fa fa-unlock-alt mr-2"></i> Đăng nhập
+        </button>
+        <button id="nut-sangdk" class="btn btn-secondary">
+            → Chuyển sang Đăng Ký
+        </button>
+    </div>
+
+    <div id="dk-form" class="card an">
+        <h1 class="title"><i class="fa-solid fa-user-plus"></i> Đăng Ký</h1>
+        <div id="tb-dk" class="tb"></div>
+        
+        <div class="ip">
+            <label><i class="fa fa-envelope"></i> Email</label>
+            <input type="email" id="dk-email" placeholder="taiphattt39@gmail.com" autocomplete="email">
+        </div>
+        <div class="ip">
+            <label><i class="fa fa-lock"></i> Mật khẩu mới</label>
+            <input type="password" id="dk-mk" autocomplete="new-password">
+        </div>
+        <div class="ip">
+            <label style="justify-content:center;">Mã bảo mật (4 số)</label>
+            <input type="password" id="dk-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center">
+        </div>
+
+        <button id="nut-dangky" class="btn btn-primary">✅ Hoàn tất Đăng Ký</button>
+        <button id="nut-sangdn" class="btn btn-secondary">← Quay lại Đăng Nhập</button>
+    </div>
+</div>
+
+<div id="trang-chinh" class="main-body" style="display:none;">
     <div class="top-bar">
-        <div class="text-track">
-            <div class="text-content">
-                ⬅️ Tài • NHÀ PHÁT TRIỂN: Huỳnh Phát Tài • ĐỒNG SÁNG LẬP: Không ai • BLOXSTORE TEAM 🚀
+        <button class="menu-btn" onclick="moMenu()">☰</button>
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-trang="dichvu"><i class="fa fa-briefcase"></i> Dịch Vụ</button>
+            <button class="tab-btn" data-trang="dat"><i class="fa fa-shopping-cart"></i> Đặt Hàng</button>
+            <button class="tab-btn" data-trang="lichsu"><i class="fa fa-clock"></i> Lịch Sử</button>
+        </div>
+        <span class="user-avatar">👤</span>
+    </div>
+
+    <div class="container">
+        <div id="pg-dichvu" class="page active">
+            <div class="service-card">
+                <h2 class="category-title"><i class="fa fa-list-alt"></i> Bảng Giá Dịch Vụ Chính Thức</h2>
+                <div class="item-row"><span>🛠️ Fix lỗi / Chỉnh sửa mã</span><span class="price-tag">50.000đ+</span></div>
+                <div class="item-row"><span>📄 Trang Web / CV / Giới thiệu</span><span class="price-tag">200.000đ</span></div>
+                <div class="item-row"><span>🚀 Website Hoàn chỉnh / Hệ thống</span><span class="price-tag">400.000đ</span></div>
+                <div class="item-row"><span>🎨 Thiết kế Hình / Giao diện</span><span class="price-tag">100.000đ</span></div>
+                <div class="item-row"><span>📱 Ứng dụng / Tool Python</span><span class="price-tag">300.000đ</span></div>
             </div>
-            <div class="text-content">
-                ⬅️ Tài • NHÀ PHÁT TRIỂN: Huỳnh Phát Tài • ĐỒNG SÁNG LẬP: Không ai • BLOXSTORE TEAM 🚀
+            <div class="service-card">
+                <h3 class="category-title text-emerald-300"><i class="fa fa-headset"></i> Hỗ trợ & Liên lạc</h3>
+                <p class="mb-2 text-slate-300">⏱️ Phản hồi nhanh trong ngày làm việc</p>
+                <p class="text-slate-300">✅ Bảo hành & Hướng dẫn chi tiết khi có thông tin liên hệ</p>
+            </div>
+        </div>
+
+        <div id="pg-dat" class="page">
+            <div class="service-card">
+                <h2 class="category-title text-blue-300"><i class="fa fa-pen-to-square"></i> 📋 Đặt Hàng Mới</h2>
+                
+                <div class="form-group">
+                    <label><i class="fa fa-list-ul"></i> Chọn Dịch Vụ</label>
+                    <select id="selDichVu" class="form-control">
+                        <option>🛠️ Fix lỗi / Chỉnh sửa mã - 50.000đ+</option>
+                        <option>📄 Trang Web / CV / Giới thiệu - 200.000đ</option>
+                        <option>🚀 Website Hoàn chỉnh / Hệ thống - 400.000đ</option>
+                        <option>🎨 Thiết kế Hình / Giao diện - 100.000đ</option>
+                        <option>📱 Ứng dụng / Tool / Tự động hóa - 300.000đ</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-user-circle"></i> Thông tin liên lạc <span class="batbuoc">*</span></label>
+                    <input type="text" id="lienLac" class="form-control" placeholder="VD: SĐT/Zalo: 09xxxxxx / Discord..." required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-file-text"></i> Mô tả yêu cầu <span class="batbuoc">*</span></label>
+                    <textarea id="moTa" rows="4" class="form-control" placeholder="Viết rõ chức năng, yêu cầu, link tham khảo..." required></textarea>
+                </div>
+
+                <div id="thongbaoDatHang" class="tb"></div>
+                <button onclick="datHang()" class="submit-btn"><i class="fa fa-paper-plane"></i> Gửi Đơn Hàng</button>
+            </div>
+        </div>
+
+        <!-- Lịch sử có đủ 3 nút: Chờ, Xác nhận, Hủy -->
+        <div id="pg-lichsu" class="page">
+            <div id="khungLichSu">
+                <div class="empty-state">
+                    <i class="fa fa-shopping-bag"></i>
+                    <h3 class="text-xl mb-2">Chưa có đơn hàng nào</h3>
+                    <p class="mb-4">Chuyển sang Đặt Hàng để tạo đơn đầu tiên nhé!</p>
+                    <button onclick="chuyenTrang('dat')" class="submit-btn w-auto inline-block px-6">Tạo đơn hàng</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="header-section">
-        <div class="cart-logo"><i class="fa-solid fa-cart-shopping"></i></div>
-        <h1>BLOXSTORE</h1>
-        <p class="desc">
-            Dịch vụ tin cậy • Nền tảng an toàn<br>
-            • Hiện đại • Nền tảng Python
-        </p>
+    <div id="lop-phu" class="lop-phu" onclick="dongMenu()"></div>
+    <div id="menu-chinh" class="sidebar">
+        <button class="close-menu" onclick="dongMenu()">✕</button>
+        <h3 class="text-lg font-semibold text-sky-300 mb-6 mt-2">☰ Menu</h3>
+        <div class="dong" onclick="chuyenTrang('dichvu')"><i class="fa fa-briefcase"></i> Dịch vụ</div>
+        <div class="dong" onclick="chuyenTrang('dat')"><i class="fa fa-cart-plus"></i> Đặt hàng</div>
+        <div class="dong" onclick="chuyenTrang('lichsu')"><i class="fa fa-history"></i> Lịch sử</div>
+        <div class="dong" onclick="dangXuat()"><i class="fa fa-sign-out-alt"></i> Đăng xuất</div>
     </div>
+</div>
 
-    <div class="divider-line"></div>
+<script>
+const LUU_TAIKHOAN = "bloxstore_user";
+const LUU_LICHSU = "bloxstore_orders";
+let currentUser = null;
 
-    <div class="form-card">
-        <!-- Form Đăng Nhập -->
-        <div id="loginView">
-            <h2 class="form-title"><span>➔</span> Đăng Nhập</h2>
+function chuyenTrang(ten){
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(`pg-${ten}`).classList.add('active');
+    document.querySelector(`[data-trang="${ten}"]`)?.classList.add('active');
+    
+    if(ten === 'lichsu') capNhatLichSu();
+}
+document.addEventListener('click', e => {
+    if(e.target.classList.contains('tab-btn')) chuyenTrang(e.target.dataset.trang);
+});
 
-            <div class="field">
-                <label>Tên tài khoản / Email</label>
-                <input type="text" id="uLogin" placeholder="Nhập thông tin...">
-            </div>
-            <div class="field">
-                <label>Mật khẩu</label>
-                <input type="password" id="pLogin" placeholder="••••••••••">
-            </div>
+document.getElementById("nut-sangdk").onclick = () => {
+    document.getElementById("dn-form").classList.add("an");
+    document.getElementById("dk-form").classList.remove("an");
+};
+document.getElementById("nut-sangdn").onclick = () => {
+    document.getElementById("dk-form").classList.add("an");
+    document.getElementById("dn-form").classList.remove("an");
+};
 
-            <div class="form-footer">
-                <label><input type="checkbox" style="width:auto"> Ghi nhớ đăng nhập</label>
-                <a href="#">Quên mật khẩu?</a>
-            </div>
+document.getElementById("nut-dangky").onclick = () => {
+    const e = document.getElementById("dk-email").value.trim(),
+          mk = document.getElementById("dk-mk").value,
+          ma = document.getElementById("dk-ma").value,
+          tb = document.getElementById("tb-dk");
+    if(!e || mk.length < 6 || !/^\d{4}$/.test(ma)){
+        tb.className="tb err"; tb.textContent="❌ Thông tin không hợp lệ!";
+        return;
+    }
+    
+    localStorage.setItem(LUU_TAIKHOAN, JSON.stringify({email:e, mk:btoa(mk), ma}));
+    tb.className="tb ok"; tb.textContent="✅ Đăng ký thành công!";
+    setTimeout(()=>{
+        document.getElementById("dk-form").classList.add("an"); 
+        document.getElementById("dn-form").classList.remove("an");
+        document.getElementById("dn-email").value = e;
+    },1000);
+};
 
-            <button class="btn-submit" onclick="dangNhap()"><i class="fa-solid fa-lock"></i> Tiếp tục</button>
-            
-            <div class="swap-link">
-                Chưa có tài khoản? <a href="javascript:doiForm()">Đăng ký ngay</a>
-            </div>
+document.getElementById("nut-dangnhap").onclick = () => {
+    const email = document.getElementById("dn-email").value.trim(),
+          mk = document.getElementById("dn-mk").value,
+          ma = document.getElementById("dn-ma").value,
+          tb = document.getElementById("tb-dn"),
+          luu = localStorage.getItem(LUU_TAIKHOAN);
+    
+    if(!luu){ tb.className="tb err"; tb.textContent="⚠️ Chưa có tài khoản!"; return; }
+    try{
+        const u = JSON.parse(luu);
+        if(u.email===email && atob(u.mk)===mk && u.ma===ma){
+            tb.className="tb ok"; tb.textContent="✅ Đăng nhập thành công!";
+            setTimeout(()=>{
+                document.getElementById("khu-dangnhap").style.display="none";
+                document.getElementById("trang-chinh").style.display="block";
+                chuyenTrang("dichvu");
+            },500);
+        } else tb.className="tb err"; tb.textContent="❌ Sai thông tin!";
+    }catch(e){ tb.className="tb err"; tb.textContent="❌ Lỗi dữ liệu!"; }
+};
+
+function datHang(){
+    const tb = document.getElementById("thongbaoDatHang");
+    const dv = document.getElementById("selDichVu").value;
+    const lienLac = document.getElementById("lienLac").value.trim();
+    const moTa = document.getElementById("moTa").value.trim();
+    
+    if(!lienLac) { tb.className="tb err"; tb.textContent="❌ Nhập thông tin liên lạc!"; return; }
+    if(!moTa) { tb.className="tb err"; tb.textContent="❌ Nhập mô tả công việc!"; return; }
+    
+    const ls = JSON.parse(localStorage.getItem(LUU_LICHSU)||"[]");
+    ls.unshift({
+        id:"#DH" + Date.now(), 
+        dv: dv, 
+        lienHe: lienLac, 
+        ghiChu: moTa, 
+        thoiGian: new Date().toLocaleString("vi-VN"), 
+        trangThai:"⏳ Chờ xác nhận"
+    });
+    localStorage.setItem(LUU_LICHSU, JSON.stringify(ls));
+    
+    tb.className="tb ok"; tb.textContent="✅ Đặt hàng thành công!";
+    document.getElementById("lienLac").value = "";
+    document.getElementById("moTa").value = "";
+}
+
+function capNhatLichSu(){
+    const ds = JSON.parse(localStorage.getItem(LUU_LICHSU)||"[]"), khung=document.getElementById("khungLichSu");
+    if(!ds.length){ 
+        khung.innerHTML=`<div class="empty-state"><i class="fa fa-folder-open"></i><h3>Chưa có đơn hàng</h3></div>`; 
+        return; 
+    }
+    
+    khung.innerHTML=ds.map(d=>`
+    <div class="service-card">
+        <div class="font-bold text-lg mb-1">${d.id} • ${d.dv}</div>
+        <div class="text-sm text-sky-200 mb-1"><i class="fa fa-address-card"></i> Liên hệ: ${d.lienHe}</div>
+        <div class="text-slate-300 text-sm mb-2">${d.ghiChu||"(Trống)"}</div>
+        <div class="text-xs text-emerald-400 font-semibold mb-3">📅 ${d.thoiGian} • ${d.trangThai}</div>
+        
+        <div class="khung-nut">
+            <button class="btn-nho btn-vang" onclick="doiTrangThai('${d.id}', '⏳ Chờ xác nhận')">
+                <i class="fa fa-clock"></i> Chờ
+            </button>
+            <button class="btn-nho btn-xanh" onclick="doiTrangThai('${d.id}', '✅ Hoàn tất')">
+                <i class="fa fa-check"></i> Xác nhận
+            </button>
+            <button class="btn-nho btn-do" onclick="doiTrangThai('${d.id}', '❌ Đã hủy')">
+                <i class="fa fa-times"></i> Hủy
+            </button>
         </div>
+    </div>`).join("");
+}
 
-        <!-- ✅ Form Đăng Ký ĐẦY ĐỦ -->
-        <div id="registerView" class="hidden">
-            <h2 class="form-title"><span>📝</span> Đăng Ký Tài Khoản</h2>
+function doiTrangThai(idMoi, trangThaiMoi){
+    const ds = JSON.parse(localStorage.getItem(LUU_LICHSU)||"[]");
+    const capNhat = ds.map(doi => doi.id === idMoi ? {...doi, trangThai: trangThaiMoi} : doi);
+    localStorage.setItem(LUU_LICHSU, JSON.stringify(capNhat));
+    capNhatLichSu();
+}
 
-            <div class="field">
-                <label>Tên tài khoản / Email</label>
-                <input type="text" id="uReg" placeholder="Nhập thông tin...">
-            </div>
-            <div class="field">
-                <label>Mật khẩu</label>
-                <input type="password" id="pReg1" placeholder="Tạo mật khẩu">
-            </div>
-            <div class="field">
-                <label>Nhập lại mật khẩu</label>
-                <input type="password" id="pReg2" placeholder="Xác nhận mật khẩu">
-            </div>
-
-            <button class="btn-submit" onclick="dangKy()"><i class="fa-solid fa-check"></i> Hoàn tất</button>
-            
-            <div class="swap-link">
-                Đã có tài khoản? <a href="javascript:doiForm()">Quay lại Đăng nhập</a>
-            </div>
-        </div>
-
-        <div id="thongBao" class="message"></div>
-
-        <div class="admin-info">
-            <strong>Tài khoản quản trị:</strong><br>taiphattt39@gmail.com | 123456
-        </div>
-    </div>
-
-    <script>
-        const TK_ADMIN = {email:"taiphattt39@gmail.com", mk:"123456"};
-        function dsTaiKhoan(){return JSON.parse(localStorage.getItem("dsTK")||"{}");}
-
-        function doiForm(){
-            document.getElementById("loginView").classList.toggle("hidden");
-            document.getElementById("registerView").classList.toggle("hidden");
-            document.getElementById("thongBao").style.display="none";
-        }
-
-        function hienTB(noidung, thanhCong){
-            const o = document.getElementById("thongBao");
-            o.textContent = noidung;
-            o.className = "message " + (thanhCong ? "ok" : "err");
-            o.style.display = "block";
-        }
-
-        function dangNhap(){
-            const u = document.getElementById("uLogin").value.trim();
-            const p = document.getElementById("pLogin").value.trim();
-            if(!u||!p) return hienTB("Điền đủ thông tin!", false);
-            
-            const ds = dsTaiKhoan();
-            if((u===TK_ADMIN.email && p===TK_ADMIN.mk) || ds[u]===p){
-                localStorage.setItem("nguoiDangNhap",u);
-                hienTB("✅ Đăng nhập thành công!", true);
-            }else hienTB("❌ Sai thông tin!", false);
-        }
-
-        function dangKy(){
-            const u = document.getElementById("uReg").value.trim();
-            const p1 = document.getElementById("pReg1").value.trim();
-            const p2 = document.getElementById("pReg2").value.trim();
-            
-            if(!u||!p1||!p2) return hienTB("Điền đầy đủ thông tin!", false);
-            if(p1!==p2) return hienTB("Mật khẩu không khớp!", false);
-            if(p1.length<6) return hienTB("Mật khẩu ít nhất 6 ký tự!", false);
-
-            const ds = dsTaiKhoan();
-            if(ds[u] || u===TK_ADMIN.email) return hienTB("Tên đã tồn tại!", false);
-            
-            ds[u]=p1;
-            localStorage.setItem("dsTK",JSON.stringify(ds));
-            localStorage.setItem("nguoiDangNhap",u);
-            hienTB("✅ Đăng ký thành công!", true);
-        }
-    </script>
-</body>
-</html>
+function moMenu(){document.getElementById("menu-chinh").classList.add("mo"); document.getElementById("lop-phu").classList.add("hien");}
+function dongMenu(){document.getElementById("menu-chinh").classList.rem
