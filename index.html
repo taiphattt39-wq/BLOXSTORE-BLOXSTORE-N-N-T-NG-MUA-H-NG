@@ -2,427 +2,305 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BLOXSTORE • HUỲNH PHÁT TÀI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.1/crypto-js.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BloxStore | Xyneris 🚀</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-        html { scroll-behavior: smooth; height: 100%; }
-        body { min-height: 100%; background:#0f172a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        :root {
+            --main: #5865F2; --dark: #1e1f26; --card: #2b2d3b;
+            --green: #3ba55c; --red: #ed4245; --yellow: #faa61a;
+        }
+        body { background: #121214; color: #fff; min-height: 100vh; }
 
-        /* === Header === */
-        .app-header {
-            background: linear-gradient(90deg,#042f2e,#064e3b,#042f2e);
-            border-bottom:2px solid #6ee7b7; padding:.9rem 0; overflow:hidden; position:sticky; top:0; z-index:9999;
+        /* === BANNER BẢO TRÌ === */
+        .maintenance-banner {
+            display: none;
+            background: linear-gradient(90deg, var(--yellow), #d48e17);
+            color: white;
+            padding: 0.9rem;
+            text-align: center;
+            font-weight: 600;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            animation: pulse 2s infinite;
         }
-        .scroll-line { display:flex; width:max-content; animation: runTitle 22s linear infinite; }
-        .scroll-text {
-            color:white; font-weight:600; font-size:1.1rem;
-            padding:0 60px; white-space:nowrap;
+        .maintenance-banner.active { display: block; }
+        @keyframes pulse {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
-        @keyframes runTitle { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
 
-        /* === Trang Đăng Nhập/Đăng Ký === */
-        .body-auth { 
-            background:linear-gradient(180deg,#059669,#10b981); 
-            min-height:100vh; 
-            padding:1.5rem 1rem 3rem; 
+        header {
+            background: var(--dark);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 99;
         }
-        .alert-top {
-            background:#065f46; border:2px solid #6ee7b7; color:#dcfce7;
-            padding:.8rem; border-radius:999px; max-width:420px; margin:0 auto 1.5rem; text-align:center; font-size:1rem; font-weight:500;
-        }
-        .card {
-            background:linear-gradient(180deg,#2563eb,#3b82f6);
-            border-radius:32px; padding:2rem 1.6rem; max-width:420px; margin:0 auto;
-            box-shadow:0 15px 35px rgba(0,0,0,.25);
-        }
-        .an { display:none !important; }
-        .title {
-            color:white; text-align:center; font-size:1.6rem; font-weight:bold; margin-bottom:1.5rem;
-            display:flex; align-items:center; justify-content:center; gap:.5rem;
-        }
-        .ip { margin-bottom:1.2rem; }
-        .ip label {
-            display:flex; align-items:center; gap:.5rem; color:white; font-size:1rem; font-weight:500; margin-bottom:.5rem;
-        }
-        .ip input {
-            width:100%; padding:.9rem 1.1rem; border-radius:16px; border:none; 
-            font-size:1rem; outline:none; background:#fff; color:#1e293b;
-            transition:.2s;
-        }
-        .ip input:focus { box-shadow:0 0 0 3px rgba(255,255,255,.25); }
-        .tb { 
-            padding:.8rem; border-radius:10px; text-align:center; margin-bottom:1rem; 
-            display:none; font-weight:500;
-        }
-        .ok { background:#dcfce7; color:#166534; border:1px solid #6ee7b7; display:block; }
-        .err { background:#fee2e2; color:#991b1b; border:1px solid #fca5a5; display:block; }
-
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--main); }
+        nav a { color: #ccc; margin-left: 1.5rem; text-decoration: none; transition: .2s; }
+        nav a:hover { color: var(--main); }
         .btn {
-            width:100%; padding:.9rem; border-radius:14px; border:none; 
-            font-weight:bold; font-size:1rem; cursor:pointer;
-            transition:.2s;
+            background: var(--main);
+            padding: .6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: .2s;
+            text-decoration: none;
+            display: inline-block;
         }
-        .btn:active { transform:scale(.97); }
-        .btn-primary { background:#10b981; color:white; margin-bottom:.8rem; box-shadow:0 6px 12px rgba(16,185,129,.2);}
-        .btn-secondary { background:rgba(255,255,255,.18); color:white; backdrop-filter:blur(4px);}
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(88,101,242,.3); }
+        .btn-green { background: var(--green); }
 
-        /* === Trang Chính === */
-        .main-body { background:#0f172a; color:#f1f5f9; min-height:100vh; padding-bottom:3rem; display:none; }
-        .top-bar {
-            background:#0b1220; padding:.9rem 1rem; display:flex; align-items:center; gap:.8rem;
-            position:sticky; top:0; z-index:999; border-bottom:1px solid #1e293b;
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .hero { text-align: center; padding: 3rem 1rem; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero span { color: var(--main); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: .3s;
+            border-left: 4px solid transparent;
         }
-        .menu-btn { font-size:1.5rem; background:none; border:none; color:#fff; cursor:pointer; padding:.4rem; }
-        .nav-tabs { display:flex; gap:.4rem; flex:1; }
-        .tab-btn {
-            flex:1; padding:.8rem .6rem; border-radius:999px; border:none; font-weight:600;
-            background:#1e293b; color:#94a3b8; cursor:pointer; font-size:.9rem;
-            transition:.2s;
-        }
-        .tab-btn.active { background:#2563eb; color:#fff; box-shadow:0 0 10px rgba(37,99,235,.25); }
-        .user-avatar { font-size:1.4rem; }
+        .card:hover { transform: translateY(-5px); }
+        .card.online { border-left-color: var(--green); }
+        .card.offline { border-left-color: var(--red); }
+        .card.maintenance { border-left-color: var(--yellow); }
 
-        .container { padding:1.2rem; max-width:100%; margin:0 auto; }
-        .page { display:none; }
-        .page.active { display:block; }
+        .status { display: flex; align-items: center; gap: .5rem; margin-top: 1rem; }
+        .dot {
+            width: 12px; height: 12px; border-radius: 50%;
+            background: #444; display: inline-block;
+        }
+        .dot.online { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .dot.offline { background: var(--red); box-shadow: 0 0 8px var(--red); }
+        .dot.maintenance { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
 
-        .service-card {
-            background:#111827; border:1px solid #1f2937; border-radius:20px; 
-            padding:1.4rem; margin-bottom:1.3rem;
+        .version-tag {
+            display: inline-block;
+            background: #3a3c4e;
+            padding: .25rem .75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-top: .5rem;
         }
-        .category-title { 
-            display:flex; align-items:center; gap:.6rem; font-size:1.2rem; font-weight:bold; 
-            margin-bottom:1.2rem; color:#38bdf8;
-        }
-        .item-row { 
-            display:flex; justify-content:space-between; align-items:center; 
-            padding:.9rem 0; border-bottom:1px dashed #334155; gap:.6rem; flex-wrap:wrap;
-        }
-        .price-tag { background:rgba(16,185,129,.15); color:#34d399; padding:.4rem .9rem; border-radius:999px; font-weight:bold; }
-        .empty-state { text-align:center; padding:4rem 2rem; color:#64748b; }
-        .empty-state i { font-size:3rem; margin-bottom:1rem; opacity:.5; }
 
-        /* === Form & Nút === */
-        .form-group { margin-bottom:1.2rem; }
-        .form-group label { 
-            display:block; margin-bottom:.5rem; font-weight:500; color:#e2e8f0; 
-            display:flex; align-items:center; gap:.5rem;
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #777;
+            margin-top: 3rem;
+            border-top: 1px solid #222;
         }
-        .batbuoc { color:#f87171; font-weight:bold; }
-        .form-control {
-            width:100%; padding:1rem; border-radius:12px; border:1px solid #334155;
-            background:#1e293b; color:white; font-size:1rem; font-family:inherit;
-            transition:.2s;
-        }
-        .form-control:focus { outline:none; border-color:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
-        .submit-btn { background:#2563eb; color:white; padding:1rem; border:none; border-radius:12px; font-weight:bold; width:100%; font-size:1rem; margin-top:.5rem; }
-        .submit-btn:active { transform:scale(.98); }
 
-        .btn-nho {
-            padding:.6rem .9rem; border-radius:8px; border:none; font-weight:600; font-size:.8rem; cursor:pointer; transition:.2s;
+        /* === TRANG BẢO TRÌ TOÀN MÀN HÌNH === */
+        .maintenance-page {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, #0f0f11, #1a1a1f);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
         }
-        .btn-xanh { background:#16a34a; color:white; }
-        .btn-vang { background:#f59e0b; color:#1e293b; }
-        .btn-do { background:#dc2626; color:white; }
-        .khung-nut { display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap; }
+        .maintenance-page.active { display: flex; }
 
-        /* === Menu Trượt === */
-        .sidebar {
-            position:fixed; top:0; left:-100%; width:280px; height:100vh; background:#020617;
-            border-right:1px solid #1f2937; padding:2rem 1.5rem; transition:.3s ease; z-index:9999;
+        .maintenance-box {
+            max-width: 550px;
+            width: 100%;
         }
-        .sidebar.mo { left:0; }
-        .dong { padding:1rem 0; border-bottom:1px solid #1f2937; cursor:pointer; display:flex; align-items:center; gap:.6rem; color:#e2e8f0; }
-        .close-menu { position:absolute; top:1rem; right:1rem; background:none; border:none; color:#94a3b8; font-size:1.3rem; cursor:pointer; }
-        .lop-phu { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); z-index:9998; }
-        .lop-phu.hien { display:block; }
+        .maintenance-box h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--yellow);
+        }
+        .maintenance-box .icon { font-size: 4rem; margin-bottom: 1rem; }
+        .maintenance-box p {
+            font-size: 1.05rem;
+            color: #ccc;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        .maintenance-box .thank-you {
+            color: var(--main);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #2a2a2f;
+        }
+        .spinner {
+            width: 55px; height: 55px;
+            border: 4px solid #2a2a2f;
+            border-top-color: var(--yellow);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .hidden-when-maintenance { transition: opacity 0.3s; }
+        body.maintenance-active .hidden-when-maintenance { opacity: 0.2; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<div class="app-header">
-    <div class="scroll-line">
-        <span class="scroll-text">💎 HUỲNH PHÁT TÀI • BLOXSTORE • DỊCH VỤ UY TÍN • AN TOÀN • MINH BẠCH 💎</span>
-        <span class="scroll-text">💎 HUỲNH PHÁT TÀI • BLOXSTORE • DỊCH VỤ UY TÍN • AN TOÀN • MINH BẠCH 💎</span>
-    </div>
-</div>
-
-<!-- Khu Đăng Nhập / Đăng Ký -->
-<div id="khu-dangnhap" class="body-auth">
-    <div class="alert-top">🔒 Bảo mật thông tin & Mã hóa an toàn</div>
-    
-    <div id="dn-form" class="card">
-        <h1 class="title"><i class="fa-solid fa-lock"></i> Đăng Nhập</h1>
-        <div id="tb-dn" class="tb"></div>
-        
-        <div class="ip">
-            <label><i class="fa fa-envelope"></i> Email</label>
-            <input type="email" id="dn-email" placeholder="taiphattt39@gmail.com" autocomplete="email">
-        </div>
-        <div class="ip">
-            <label><i class="fa fa-key"></i> Mật khẩu</label>
-            <input type="password" id="dn-mk" autocomplete="current-password">
-        </div>
-        <div class="ip">
-            <label style="justify-content:center;">Mã bảo mật (4 số)</label>
-            <input type="text" id="dn-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center" autocomplete="one-time-code">
-        </div>
-
-        <button id="nut-dangnhap" class="btn btn-primary">
-            <i class="fa fa-unlock-alt mr-2"></i> Đăng nhập
-        </button>
-        <button id="nut-sangdk" class="btn btn-secondary">
-            → Chuyển sang Đăng Ký Tài Khoản
-        </button>
+    <!-- === BANNER THÔNG BÁO NHỎ === -->
+    <div class="maintenance-banner" id="maintenanceBanner">
+        🔄 Đang cập nhật & bảo trì hệ thống — Vui lòng chờ trong giây lát...
     </div>
 
-    <div id="dk-form" class="card an">
-        <h1 class="title"><i class="fa-solid fa-user-plus"></i> Đăng Ký</h1>
-        <div id="tb-dk" class="tb"></div>
-        
-        <div class="ip">
-            <label><i class="fa fa-envelope"></i> Email</label>
-            <input type="email" id="dk-email" placeholder="taiphattt39@gmail.com" autocomplete="email">
+    <!-- === TRANG BẢO TRÌ TOÀN MÀN HÌNH === -->
+    <div class="maintenance-page" id="maintenancePage">
+        <div class="maintenance-box">
+            <div class="icon">🛠️</div>
+            <h1>Đang Bảo Trì & Cập Nhật</h1>
+            
+            <p>Chào quý khách,</p>
+            <p>Hệ thống BloxStore đang được <strong>nâng cấp và tối ưu hóa</strong> để mang đến trải nghiệm tốt hơn, nhanh hơn và an toàn hơn 🚀</p>
+            <p>Chúng tôi đang nỗ lực hoàn thành sớm nhất có thể — vui lòng chờ đợi một chút nhé!</p>
+            
+            <div class="spinner"></div>
+            
+            <p class="thank-you">💖 Cảm ơn quý khách đã tin tưởng và đồng hành cùng chúng tôi!</p>
+            <p style="color:#888; font-size:0.9rem; margin-top:0.5rem;">Sẽ trở lại ngay thôi — hẹn gặp lại! ✨</p>
         </div>
-        <div class="ip">
-            <label><i class="fa fa-lock"></i> Mật khẩu mới (từ 6 ký tự)</label>
-            <input type="password" id="dk-mk" autocomplete="new-password">
-        </div>
-        <div class="ip">
-            <label style="justify-content:center;">Mã bảo mật (4 số - bắt buộc)</label>
-            <input type="text" id="dk-ma" maxlength="4" inputmode="numeric" placeholder="••••" class="text-center">
-        </div>
-
-        <button id="nut-dangky" class="btn btn-primary">✅ Hoàn tất Đăng Ký</button>
-        <button id="nut-sangdn" class="btn btn-secondary">← Quay lại Đăng Nhập</button>
-    </div>
-</div>
-
-<!-- Trang chính sau khi đăng nhập -->
-<div id="trang-chinh" class="main-body">
-    <div class="top-bar">
-        <button class="menu-btn" onclick="moMenu()">☰</button>
-        <div class="nav-tabs">
-            <button class="tab-btn active" data-trang="dichvu"><i class="fa fa-briefcase"></i> Dịch Vụ</button>
-            <button class="tab-btn" data-trang="dat"><i class="fa fa-shopping-cart"></i> Đặt Hàng</button>
-            <button class="tab-btn" data-trang="lichsu"><i class="fa fa-clock"></i> Lịch Sử</button>
-        </div>
-        <span class="user-avatar">👤</span>
     </div>
 
-    <div class="container">
-        <div id="pg-dichvu" class="page active">
-            <div class="service-card">
-                <h2 class="category-title"><i class="fa fa-list-alt"></i> Bảng Giá Dịch Vụ Chính Thức</h2>
-                <div class="item-row"><span>🛠️ Fix lỗi / Chỉnh sửa mã</span><span class="price-tag">50.000đ+</span></div>
-                <div class="item-row"><span>📄 Trang Web / CV / Giới thiệu</span><span class="price-tag">200.000đ</span></div>
-                <div class="item-row"><span>🚀 Website Hoàn chỉnh / Hệ thống</span><span class="price-tag">400.000đ</span></div>
-                <div class="item-row"><span>🎨 Thiết kế Hình / Giao diện</span><span class="price-tag">100.000đ</span></div>
-                <div class="item-row"><span>📱 Ứng dụng / Tool Python</span><span class="price-tag">300.000đ</span></div>
-            </div>
-            <div class="service-card">
-                <h3 class="category-title text-emerald-300"><i class="fa fa-headset"></i> Hỗ trợ & Liên lạc</h3>
-                <p class="mb-2 text-slate-300">⏱️ Phản hồi nhanh trong ngày làm việc</p>
-                <p class="text-slate-300">✅ Bảo hành & Hướng dẫn chi tiết khi có thông tin liên hệ</p>
-            </div>
+    <!-- === NỘI DUNG CHÍNH === -->
+    <div class="hidden-when-maintenance">
+        <header>
+            <div class="logo">🔷 BloxStore</div>
+            <nav>
+                <a href="#home">Trang chủ</a>
+                <a href="#products">Sản phẩm</a>
+                <a href="#status">Trạng thái</a>
+                <a href="https://discord.gg/yourserver" target="_blank">Discord</a>
+                <a href="/login" class="btn">Đăng nhập Discord</a>
+            </nav>
+        </header>
+
+        <div class="container">
+            <section class="hero" id="home">
+                <h1>Chào mừng đến với <span>BloxStore</span></h1>
+                <p>Nền tảng mua bán & quản lý sản phẩm Roblox — đồng bộ với Discord 🤖</p>
+                <div style="margin-top: 2rem;">
+                    <a href="#products" class="btn">Xem sản phẩm</a>
+                    <a href="https://discord.gg/yourserver" class="btn btn-green" style="margin-left: .5rem;">Tham gia Server</a>
+                </div>
+            </section>
+
+            <section id="status">
+                <h2 style="margin-top: 3rem;">📊 Trạng thái Hệ thống</h2>
+                <div class="grid" id="statusGrid">
+                    <!-- Dữ liệu cập nhật tự động -->
+                </div>
+            </section>
+
+            <section id="products">
+                <h2 style="margin-top: 3rem;">🛒 Sản phẩm nổi bật</h2>
+                <div class="grid">
+                    <div class="card">
+                        <h3>🎁 Gói Premium</h3>
+                        <p style="color:#999; margin:.5rem 0;">Quyền nâng cao + hỗ trợ ưu tiên</p>
+                        <strong style="font-size: 1.3rem;">50.000đ</strong>
+                        <button class="btn" style="width:100%; margin-top:1rem;">Mua ngay</button>
+                    </div>
+                    <div class="card">
+                        <h3>⚙️ Bot Tùy chỉnh</h3>
+                        <p style="color:#999; margin:.5rem 0;">Code bot riêng theo yêu cầu</p>
+                        <strong style="font-size: 1.3rem;">Liên hệ</strong>
+                        <a href="https://discord.gg/yourserver" class="btn" style="width:100%; margin-top:1rem; text-align:center;">Liên hệ</a>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <div id="pg-dat" class="page">
-            <div class="service-card">
-                <h2 class="category-title text-blue-300"><i class="fa fa-pen-to-square"></i> 📋 Đặt Hàng Mới</h2>
+        <footer>
+            <p>© 2026 BloxStore | Xyneris 🚀 — Tất cả quyền được bảo lưu</p>
+        </footer>
+    </div>
+
+    <script>
+        // === KIỂM TRA TRẠNG THÁI BẢO TRÌ TỪ BACKEND ===
+        async function checkMaintenance() {
+            try {
+                const res = await fetch("/api/stats");
+                const data = await res.json();
                 
-                <div class="form-group">
-                    <label><i class="fa fa-list-ul"></i> Chọn Dịch Vụ</label>
-                    <select id="selDichVu" class="form-control">
-                        <option>🛠️ Fix lỗi / Chỉnh sửa mã - 50.000đ+</option>
-                        <option>📄 Trang Web / CV / Giới thiệu - 200.000đ</option>
-                        <option>🚀 Website Hoàn chỉnh / Hệ thống - 400.000đ</option>
-                        <option>🎨 Thiết kế Hình / Giao diện - 100.000đ</option>
-                        <option>📱 Ứng dụng / Tool / Tự động hóa - 300.000đ</option>
-                    </select>
+                const banner = document.getElementById("maintenanceBanner");
+                const page = document.getElementById("maintenancePage");
+                const body = document.body;
+
+                if (data.maintenance) {
+                    banner.classList.add("active");
+                    page.classList.add("active");
+                    body.classList.add("maintenance-active");
+                } else {
+                    banner.classList.remove("active");
+                    page.classList.remove("active");
+                    body.classList.remove("maintenance-active");
+                }
+
+                // Cập nhật trạng thái hệ thống
+                renderStatus(data);
+
+            } catch(e) {
+                console.log("API đang bảo trì/hỏng — hiển thị thông báo");
+                document.getElementById("maintenanceBanner").classList.add("active");
+                document.getElementById("maintenancePage").classList.add("active");
+                document.body.classList.add("maintenance-active");
+            }
+        }
+
+        function renderStatus(data) {
+            const grid = document.getElementById("statusGrid");
+            const maintenanceActive = data.maintenance;
+
+            grid.innerHTML = `
+                <div class="card ${maintenanceActive ? 'maintenance' : 'online'}">
+                    <h3>🤖 Bot Xyneris</h3>
+                    <div class="status">
+                        <span class="dot ${maintenanceActive ? 'maintenance' : 'online'}"></span>
+                        ${maintenanceActive ? 'Đang bảo trì' : 'Hoạt động bình thường'}
+                    </div>
+                    <p style="margin-top:.5rem; color:#999;">
+                        Server: ${data.guilds || '--'} | Thành viên: ${data.members || '--'}
+                    </p>
+                    <span class="version-tag">Phiên bản ${data.version || '1.0.0'}</span>
                 </div>
-
-                <div class="form-group">
-                    <label><i class="fa fa-user-circle"></i> Thông tin liên lạc <span class="batbuoc">*</span></label>
-                    <input type="text" id="lienLac" class="form-control" placeholder="VD: SĐT/Zalo: 09xxxxxx / Discord..." required>
+                <div class="card ${maintenanceActive ? 'maintenance' : 'online'}">
+                    <h3>🌐 API BloxStore</h3>
+                    <div class="status">
+                        <span class="dot ${maintenanceActive ? 'maintenance' : 'online'}"></span>
+                        ${maintenanceActive ? 'Đang cập nhật' : 'Trực tuyến'}
+                    </div>
+                    <p style="margin-top:.5rem; color:#999;">
+                        Phản hồi: ${data.latency || '--'}
+                    </p>
+                    <span class="version-tag">Cập nhật: ${data.last_check || 'Vừa xong'}</span>
                 </div>
+            `;
+        }
 
-                <div class="form-group">
-                    <label><i class="fa fa-file-text"></i> Mô tả yêu cầu <span class="batbuoc">*</span></label>
-                    <textarea id="moTa" rows="4" class="form-control" placeholder="Viết rõ chức năng, yêu cầu, link tham khảo..." required></textarea>
-                </div>
+        // Kiểm tra mỗi 10 giây
+        checkMaintenance();
+        setInterval(checkMaintenance, 10000);
+    </script>
+</body>
+</html>
 
-                <div id="thongbaoDatHang" class="tb"></div>
-                <button onclick="datHang()" class="submit-btn"><i class="fa fa-paper-plane"></i> Gửi Đơn Hàng</button>
-            </div>
-        </div>
-
-        <div id="pg-lichsu" class="page">
-            <div id="khungLichSu">
-                <div class="empty-state">
-                    <i class="fa fa-shopping-bag"></i>
-                    <h3 class="text-xl mb-2">Chưa có đơn hàng nào</h3>
-                    <p class="mb-4">Chuyển sang Đặt Hàng để tạo đơn đầu tiên nhé!</p>
-                    <button onclick="chuyenTrang('dat')" class="submit-btn w-auto inline-block px-6">Tạo đơn hàng</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="lop-phu" class="lop-phu" onclick="dongMenu()"></div>
-    <div id="menu-chinh" class="sidebar">
-        <button class="close-menu" onclick="dongMenu()">✕</button>
-        <h3 class="text-lg font-semibold text-sky-300 mb-6 mt-2">☰ Menu</h3>
-        <div class="dong" onclick="chuyenTrang('dichvu')"><i class="fa fa-briefcase"></i> Dịch vụ</div>
-        <div class="dong" onclick="chuyenTrang('dat')"><i class="fa fa-cart-plus"></i> Đặt hàng</div>
-        <div class="dong" onclick="chuyenTrang('lichsu')"><i class="fa fa-history"></i> Lịch sử</div>
-        <div class="dong" onclick="dangXuat()"><i class="fa fa-sign-out-alt"></i> Đăng xuất</div>
-    </div>
-</div>
-
-<script>
-// === KHÓA LƯU ===
-const KEY_ACC = "bloxstore_acc_data";
-const KEY_ORDERS = "bloxstore_orders_list";
-
-// === CHUYỂN FORM ĐK/DN ===
-document.getElementById("nut-sangdk").onclick = () => {
-    document.getElementById("dn-form").classList.add("an");
-    document.getElementById("dk-form").classList.remove("an");
-    xoaThongBao();
-};
-document.getElementById("nut-sangdn").onclick = () => {
-    document.getElementById("dk-form").classList.add("an");
-    document.getElementById("dn-form").classList.remove("an");
-    xoaThongBao();
-};
-
-function xoaThongBao(){
-    document.querySelectorAll('.tb').forEach(el=>{el.style.display='none'; el.className='tb';});
-}
-
-// === ĐĂNG KÝ ===
-document.getElementById("nut-dangky").onclick = () => {
-    const email = document.getElementById("dk-email").value.trim();
-    const mk = document.getElementById("dk-mk").value;
-    const ma = document.getElementById("dk-ma").value.trim();
-    const tb = document.getElementById("tb-dk");
-    tb.style.display='none';
-
-    if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-        tb.className="tb err"; tb.textContent="❌ Email không hợp lệ!"; return;
-    }
-    if(!mk || mk.length < 6){
-        tb.className="tb err"; tb.textContent="❌ Mật khẩu tối thiểu 6 ký tự!"; return;
-    }
-    if(!/^\d{4}$/.test(ma)){
-        tb.className="tb err"; tb.textContent="❌ Mã bảo mật đủ 4 chữ số!"; return;
-    }
-
-    // Lưu: Mã hóa mật khẩu an toàn
-    const dataUser = {
-        email: email,
-        pass: btoa(mk),
-        code: ma
-    };
-    localStorage.setItem(KEY_ACC, JSON.stringify(dataUser));
-    
-    tb.className="tb ok"; tb.textContent="✅ Đăng ký thành công! Đang chuyển...";
-    setTimeout(()=>{
-        document.getElementById("dk-form").classList.add("an"); 
-        document.getElementById("dn-form").classList.remove("an");
-        document.getElementById("dn-email").value = email;
-    },1000);
-};
-
-// ✅ ĐĂNG NHẬP - ĐÃ SỬA LỖI CHẠY & DỮ LIỆU
-document.getElementById("nut-dangnhap").addEventListener('click', function(){
-    const email = document.getElementById("dn-email").value.trim();
-    const mk = document.getElementById("dn-mk").value;
-    const ma = document.getElementById("dn-ma").value.trim();
-    const tb = document.getElementById("tb-dn");
-    tb.style.display='none';
-
-    // 1. Kiểm tra đầu vào
-    if(!email || !mk || !ma){
-        tb.className="tb err"; tb.textContent="❌ Điền đủ Email, Mật khẩu & Mã!"; return;
-    }
-
-    // 2. Lấy dữ liệu + Xử lý nếu dữ liệu hỏng/lỗi
-    let luu;
-    try{
-        const raw = localStorage.getItem(KEY_ACC);
-        if(!raw) throw new Error("Không tồn tại");
-        luu = JSON.parse(raw);
-        if(!luu || !luu.email || !luu.pass || !luu.code) throw new Error("Dữ liệu hỏng");
-    } catch(err){
-        localStorage.removeItem(KEY_ACC); // Xóa rác
-        tb.className="tb err"; tb.textContent="⚠️ Chưa có tài khoản hoặc dữ liệu lỗi! Vui lòng ĐĂNG KÝ trước.";
-        return;
-    }
-
-    // 3. Xác thực thông tin
-    const mkGiaiMa = atob(luu.pass);
-    if(email === luu.email && mk === mkGiaiMa && ma === luu.code){
-        tb.className="tb ok"; tb.textContent="✅ Đăng nhập THÀNH CÔNG! Đang tải giao diện...";
-        // Hiển thị trang chính / Ẩn đăng nhập - SỬA LỖI HIỂN THỊ
-        setTimeout(()=>{
-            document.getElementById("khu-dangnhap").style.display = "none";
-            document.getElementById("trang-chinh").style.display = "block";
-            chuyenTrang('dichvu'); // Mở mặc định trang dịch vụ
-        }, 500);
-    } else {
-        tb.className="tb err"; tb.textContent="❌ Sai Email / Mật khẩu / Mã bảo mật!";
-    }
-});
-
-// === CHUYỂN TRANG TAB ===
-function chuyenTrang(ten){
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    
-    const pageEl = document.getElementById(`pg-${ten}`);
-    const tabEl = document.querySelector(`[data-trang="${ten}"]`);
-    if(pageEl) pageEl.classList.add('active');
-    if(tabEl) tabEl.classList.add('active');
-    
-    if(ten === 'lichsu') napLichSuDonHang();
-}
-document.addEventListener('click', e => {
-    if(e.target.classList.contains('tab-btn')) chuyenTrang(e.target.dataset.trang);
-});
-
-// === ĐẶT HÀNG ===
-function datHang(){
-    const tb = document.getElementById("thongbaoDatHang");
-    const tenDV = document.getElementById("selDichVu").value;
-    const lienHe = document.getElementById("lienLac").value.trim();
-    const ghiChu = document.getElementById("moTa").value.trim();
-    
-    if(!lienHe) { tb.className="tb err"; tb.textContent="❌ Nhập thông tin liên lạc!"; return; }
-    if(!ghiChu) { tb.className="tb err"; tb.textContent="❌ Mô tả yêu cầu công việc!"; return; }
-
-    const ds = layDanhSachDon();
-    ds.unshift({
-        id: "#DH" + Date.now(),
-        dichVu: tenDV,
-        lienHe: lienHe,
-        moTa: ghiChu,
-        ngay: new Date().toLocaleString('vi-VN'),
-        trangThai: "⏳ Chờ xác nhận"
-    });
-    luuDanhSachDon(ds);
-    
-    tb.className="tb ok"; tb.textContent="✅ Đặt hàng thành công!";
-    document.getElementById("lienLac").value = "";
-    document.getElementById("moTa").value = "";
-}
-
-// === QUẢN LÝ LỊCH SỬ ===
-function layDanhSachDon(){
-    try{ return JSON.parse(localStorage.getItem(KEY_ORDERS)||"[]"); } 
-    catch
